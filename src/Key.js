@@ -2,17 +2,18 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from './App';
 
 function Key({ keyVal, isBig }) {
-  const { board, setBoard } = useContext(AppContext);
+  const { onEnter, onDelete, onSelectLetter } = useContext(AppContext);
 
   function enterKey() {
-    if (keyVal == '입력') {
-      console.log('입력');
+    if (keyVal === '입력') {
+      onEnter();
       return;
     }
-    if (keyVal == '삭제') {
-      console.log('삭제');
+    if (keyVal === '삭제') {
+      onDelete();
       return;
     }
+    onSelectLetter(keyVal);
   }
 
   return (
