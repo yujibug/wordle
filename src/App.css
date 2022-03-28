@@ -20,12 +20,34 @@ body {
   vertical-align: middle;
   width: 50px;
   height: 50px;
-  font-size: 35px;
+  font-size: 30px;
   text-align: center;
   padding-top: 5px;
   border-radius: 5px;
-  margin: 5px;
-  border: 1px solid black;
+  margin: 3px;
+  border: 2px solid rgb(168, 168, 168);
+}
+
+#correct {
+  background-color: #6dc767;
+  border: 2px solid #6dc767;
+  color: white;
+}
+
+#almost {
+  background-color: #ebd151;
+  border: 2px solid #ebd151;
+  color: white;
+}
+
+#error {
+  background-color: #8f8c97;
+  border: 2px solid #8f8c97;
+  color: white;
+}
+
+#notWord {
+  color: red;
 }
 
 .keyboard {
@@ -36,7 +58,7 @@ body {
   display: inline-block;
   width: 35px;
   height: 50px;
-  background-color: lightgray;
+  background-color: rgb(228, 225, 225);
   border-radius: 5px;
   margin-left: 5px;
   margin-top: 10px;

@@ -18,17 +18,17 @@ function Keyboard() {
     } else if (event.key === 'Backspace') {
       onDelete();
     } else {
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 8; i++) {
         if (event.key.toLowerCase() === keysEng1[i]) {
           onSelectLetter(keys1[i]);
         }
       }
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 9; i++) {
         if (event.key.toLowerCase() === keysEng2[i]) {
           onSelectLetter(keys2[i]);
         }
       }
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 7; i++) {
         if (event.key.toLowerCase() === keysEng3[i]) {
           onSelectLetter(keys3[i]);
         }
