@@ -16,10 +16,11 @@ function App() {
   const splittedCorrectWord = 'ㅈㅓㅇㄷㅏㅂ';
   const correctWord = '정답';
   const [wordSet, setWordSet] = useState(new Set(KoreanNounList.ALL_NOUNS));
+  const [notWord, setNotWord] = useState(false);
 
-  useEffect(() => {
-    console.log(wordSet);
-  }, []);
+  // useEffect(() => {
+  //   console.log(wordSet);
+  // }, []);
 
   const onEnter = () => {
     if (currAttempt.letterPos !== 6) return;
@@ -47,6 +48,7 @@ function App() {
     if (currAttempt.letterPos === 0) {
       return;
     }
+    setNotWord(false);
     copiedBoard[currAttempt.attempt][currAttempt.letterPos - 1] = '';
     setBoard(copiedBoard);
     setCurrAttempt({ ...currAttempt, letterPos: currAttempt.letterPos - 1 });
@@ -57,6 +59,12 @@ function App() {
     const copiedBoard = [...board];
     copiedBoard[currAttempt.attempt][currAttempt.letterPos] = keyVal;
     setBoard(copiedBoard);
+    if (currAttempt.letterPos === 5) {
+      let currWord = Hangul.assemble(board[currAttempt.attempt]);
+      if (!wordSet.has(currWord)) {
+        setNotWord(true);
+      }
+    }
     setCurrAttempt({ ...currAttempt, letterPos: currAttempt.letterPos + 1 });
   };
 
@@ -86,6 +94,7 @@ function App() {
             onSelectLetter,
             splittedCorrectWord,
             wordSet,
+            notWord,
           }}
         >
           <Board></Board>
