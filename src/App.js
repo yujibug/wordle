@@ -2,8 +2,7 @@ import React, { useState, createContext, useEffect } from 'react';
 import Board from './Board';
 import Keyboard from './Keyboard';
 import './App.css';
-import { boardDefault } from './words';
-import * as KoreanNounList from 'pd-korean-noun-list-for-wordles';
+import { boardDefault, wordSet } from './words';
 
 export const AppContext = createContext();
 
@@ -15,12 +14,8 @@ function App() {
 
   const splittedCorrectWord = 'ㅈㅓㅇㄷㅏㅂ';
   const correctWord = '정답';
-  const [wordSet, setWordSet] = useState(new Set(KoreanNounList.ALL_NOUNS));
+  const [wordDictionary, setWordDictionary] = useState(wordSet);
   const [notWord, setNotWord] = useState(false);
-
-  // useEffect(() => {
-  //   console.log(wordSet);
-  // }, []);
 
   const onEnter = () => {
     if (currAttempt.letterPos !== 6) return;
@@ -32,7 +27,7 @@ function App() {
 
     currWord = Hangul.assemble(currWord);
 
-    if (!wordSet.has(currWord)) {
+    if (!wordDictionary.has(currWord)) {
       alert('단어목록에 없습니다');
       return;
     }
@@ -61,7 +56,7 @@ function App() {
     setBoard(copiedBoard);
     if (currAttempt.letterPos === 5) {
       let currWord = Hangul.assemble(board[currAttempt.attempt]);
-      if (!wordSet.has(currWord)) {
+      if (!wordDictionary.has(currWord)) {
         setNotWord(true);
       }
     }
@@ -70,15 +65,6 @@ function App() {
 
   return (
     <div className='App'>
-      <button
-        onClick={() => {
-          const array = ['a', 'b', 'c', 'c', 'd'];
-          const newSet = new Set([...array]);
-          console.log(newSet); // 'a
-        }}
-      >
-        버튼
-      </button>
       <div className='main-container'>
         <nav>
           <h1>ㅇㅜㅓㄷㅡㄹ</h1>
@@ -93,7 +79,6 @@ function App() {
             onDelete,
             onSelectLetter,
             splittedCorrectWord,
-            wordSet,
             notWord,
           }}
         >
