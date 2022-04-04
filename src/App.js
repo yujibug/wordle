@@ -3,6 +3,7 @@ import Board from './Board';
 import Keyboard from './Keyboard';
 import './App.css';
 import { boardDefault, wordSet } from './words';
+import GameOver from './GameOver';
 
 export const AppContext = createContext();
 
@@ -16,6 +17,13 @@ function App() {
   const correctWord = '정답';
   const [wordDictionary, setWordDictionary] = useState(wordSet);
   const [notWord, setNotWord] = useState(false);
+  const [disabledLetters, setDisabledLetters] = useState([]);
+  const [rightLetters, setRightLetters] = useState([]);
+  const [closeLetters, setCloseLetters] = useState([]);
+  const [gameOver, setGameOver] = useState({
+    gameOver: false,
+    guessedWord: false,
+  });
 
   const onEnter = () => {
     if (currAttempt.letterPos !== 6) return;
@@ -34,7 +42,12 @@ function App() {
     setCurrAttempt({ attempt: currAttempt.attempt + 1, letterPos: 0 });
 
     if (currWord === correctWord) {
-      alert('이겼다!');
+      setGameOver({ gameOver: true, guessedWord: true });
+      return;
+    }
+
+    if (currAttempt.attempt === 5) {
+      setGameOver({ gameOver: true, guessedWord: false });
     }
   };
 
@@ -80,10 +93,19 @@ function App() {
             onSelectLetter,
             splittedCorrectWord,
             notWord,
+            disabledLetters,
+            setDisabledLetters,
+            rightLetters,
+            setRightLetters,
+            closeLetters,
+            setCloseLetters,
+            setGameOver,
+            gameOver,
+            correctWord,
           }}
         >
           <Board></Board>
-          <Keyboard></Keyboard>
+          {gameOver.gameOver ? <GameOver></GameOver> : <Keyboard></Keyboard>}
         </AppContext.Provider>
       </div>
     </div>

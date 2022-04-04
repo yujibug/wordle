@@ -3,7 +3,14 @@ import { AppContext } from './App';
 import Key from './Key';
 
 function Keyboard() {
-  const { onEnter, onDelete, onSelectLetter } = useContext(AppContext);
+  const {
+    onEnter,
+    onDelete,
+    onSelectLetter,
+    disabledLetters,
+    rightLetters,
+    closeLetters,
+  } = useContext(AppContext);
   const keys1 = ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ'];
   const keys2 = ['ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ'];
   const keys3 = ['ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ'];
@@ -48,18 +55,42 @@ function Keyboard() {
     <div className='keyboard' onKeyDown={handleKeyboard}>
       <div className='line1'>
         {keys1.map((key, index) => {
-          return <Key keyVal={key} key={index}></Key>;
+          return (
+            <Key
+              keyVal={key}
+              key={index}
+              disabled={disabledLetters.includes(key)}
+              right={rightLetters.includes(key)}
+              close={closeLetters.includes(key)}
+            ></Key>
+          );
         })}
       </div>
       <div className='line2'>
         {keys2.map((key, index) => {
-          return <Key keyVal={key} key={index}></Key>;
+          return (
+            <Key
+              keyVal={key}
+              key={index}
+              disabled={disabledLetters.includes(key)}
+              right={rightLetters.includes(key)}
+              close={closeLetters.includes(key)}
+            ></Key>
+          );
         })}
       </div>
       <div className='line3'>
         <Key keyVal='입력' isBig={true}></Key>
         {keys3.map((key, index) => {
-          return <Key keyVal={key} key={index}></Key>;
+          return (
+            <Key
+              keyVal={key}
+              key={index}
+              disabled={disabledLetters.includes(key)}
+              right={rightLetters.includes(key)}
+              close={closeLetters.includes(key)}
+            ></Key>
+          );
         })}
         <Key keyVal='삭제' isBig={true}></Key>
       </div>

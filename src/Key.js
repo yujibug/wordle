@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from './App';
+import Letter from './Letter';
 
-function Key({ keyVal, isBig }) {
+function Key({ keyVal, isBig, disabled, right, close }) {
   const { onEnter, onDelete, onSelectLetter } = useContext(AppContext);
 
-  function enterKey() {
+  const enterKey = () => {
     if (keyVal === '입력') {
       onEnter();
       return;
@@ -14,10 +15,18 @@ function Key({ keyVal, isBig }) {
       return;
     }
     onSelectLetter(keyVal);
-  }
+  };
+
+  const keyState = disabled
+    ? 'disabled'
+    : right
+    ? 'right'
+    : close
+    ? 'close'
+    : '';
 
   return (
-    <div className='key' id={isBig && 'bigKey'} onClick={enterKey}>
+    <div className='key' id={isBig ? 'bigKey' : keyState} onClick={enterKey}>
       <p>{keyVal}</p>
     </div>
   );
