@@ -2,7 +2,7 @@ import React, { useState, createContext, useEffect } from 'react';
 import Board from './Board';
 import Keyboard from './Keyboard';
 import './App.css';
-import { boardDefault, wordSet } from './words';
+import { boardDefault, wordSet, todaysWord } from './words';
 import GameOver from './GameOver';
 
 export const AppContext = createContext();
@@ -13,9 +13,8 @@ function App() {
   const [board, setBoard] = useState(boardDefault);
   const [currAttempt, setCurrAttempt] = useState({ attempt: 0, letterPos: 0 });
 
-  const splittedCorrectWord = 'ㅈㅓㅇㄷㅏㅂ';
-  const correctWord = '정답';
   const [wordDictionary, setWordDictionary] = useState(wordSet);
+  const [correctWord, setCorrectWord] = useState(todaysWord);
   const [notWord, setNotWord] = useState(false);
   const [disabledLetters, setDisabledLetters] = useState([]);
   const [rightLetters, setRightLetters] = useState([]);
@@ -25,23 +24,54 @@ function App() {
     guessedWord: false,
   });
 
+  useEffect(() => {
+    console.log(todaysWord);
+  }, []);
+
+  const assembleletter = (currWord) => {
+    for (let i = 0; i < currWord.length; i++) {
+      if (currWord[i] === 'ㄱ' && currWord[i + 1] === 'ㄱ') {
+        currWord.splice(i, 2, 'ㄲ');
+      }
+      if (currWord[i] === 'ㄷ' && currWord[i + 1] === 'ㄷ') {
+        currWord.splice(i, 2, 'ㄸ');
+      }
+      if (currWord[i] === 'ㅂ' && currWord[i + 1] === 'ㅂ') {
+        currWord.splice(i, 2, 'ㅃ');
+      }
+      if (currWord[i] === 'ㅅ' && currWord[i + 1] === 'ㅅ') {
+        currWord.splice(i, 2, 'ㅆ');
+      }
+      if (currWord[i] === 'ㅈ' && currWord[i + 1] === 'ㅈ') {
+        currWord.splice(i, 2, 'ㅉ');
+      }
+      if (currWord[i] === 'ㅏ' && currWord[i + 1] === 'ㅣ') {
+        currWord.splice(i, 2, 'ㅐ');
+      }
+      if (currWord[i] === 'ㅓ' && currWord[i + 1] === 'ㅣ') {
+        currWord.splice(i, 2, 'ㅔ');
+      }
+      if (currWord[i] === 'ㅕ' && currWord[i + 1] === 'ㅣ') {
+        currWord.splice(i, 2, 'ㅖ');
+      }
+    }
+  };
+
   const onEnter = () => {
     if (currAttempt.letterPos !== 6) return;
 
-    let currWord = [];
-    for (let i = 0; i < 6; i++) {
-      currWord.push(board[currAttempt.attempt][i]);
-    }
+    let currWord = [...board[currAttempt.attempt]];
+    assembleletter(currWord);
+    let assembledCurrWord = Hangul.assemble(currWord);
 
-    currWord = Hangul.assemble(currWord);
-
-    if (!wordDictionary.has(currWord)) {
+    if (!wordDictionary.has(assembledCurrWord)) {
       alert('단어목록에 없습니다');
       return;
     }
     setCurrAttempt({ attempt: currAttempt.attempt + 1, letterPos: 0 });
 
-    if (currWord === correctWord) {
+    if (JSON.stringify(currWord) === JSON.stringify(correctWord)) {
+      console.log('끝');
       setGameOver({ gameOver: true, guessedWord: true });
       return;
     }
@@ -68,8 +98,11 @@ function App() {
     copiedBoard[currAttempt.attempt][currAttempt.letterPos] = keyVal;
     setBoard(copiedBoard);
     if (currAttempt.letterPos === 5) {
-      let currWord = Hangul.assemble(board[currAttempt.attempt]);
-      if (!wordDictionary.has(currWord)) {
+      let currWord = [...board[currAttempt.attempt]];
+      assembleletter(currWord);
+      let assembledCurrWord = Hangul.assemble(currWord);
+
+      if (!wordDictionary.has(assembledCurrWord)) {
         setNotWord(true);
       }
     }
@@ -91,7 +124,6 @@ function App() {
             onEnter,
             onDelete,
             onSelectLetter,
-            splittedCorrectWord,
             notWord,
             disabledLetters,
             setDisabledLetters,

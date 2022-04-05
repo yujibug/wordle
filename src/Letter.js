@@ -4,7 +4,7 @@ import { AppContext } from './App';
 function Letter({ letterPos, attemptVal }) {
   const {
     board,
-    splittedCorrectWord,
+    correctWord,
     currAttempt,
     setDisabledLetters,
     setRightLetters,
@@ -12,9 +12,8 @@ function Letter({ letterPos, attemptVal }) {
   } = useContext(AppContext);
   const letter = board[attemptVal][letterPos];
 
-  const correct = splittedCorrectWord[letterPos] === letter;
-  const almost =
-    !correct && letter !== '' && splittedCorrectWord.includes(letter);
+  const correct = correctWord[letterPos] === letter;
+  const almost = !correct && letter !== '' && correctWord.includes(letter);
 
   const letterState =
     attemptVal < currAttempt.attempt &&
