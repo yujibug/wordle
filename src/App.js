@@ -24,9 +24,26 @@ function App() {
     guessedWord: false,
   });
 
+  const [alertControl, setAlertControl] = useState(false);
+  const [fadeOutAnimation, setFadeOutAnimation] = useState('');
+  const [fadeInAnimation, setFadeInAnimation] = useState('');
+
   useEffect(() => {
-    console.log(todaysWord);
-  }, []);
+    setFadeInAnimation('fade-in-animation');
+    let fadeOutAnimation = setTimeout(() => {
+      setFadeOutAnimation('fade-out-animation');
+    }, 2000);
+    let timerAlert = setTimeout(() => {
+      setAlertControl(false);
+    }, 3000);
+    return () => {
+      clearTimeout(timerAlert);
+      clearTimeout(fadeInAnimation);
+      clearTimeout(fadeOutAnimation);
+      setFadeInAnimation('');
+      setFadeOutAnimation('');
+    };
+  }, [alertControl]);
 
   const assembleletter = (currWord) => {
     for (let i = 0; i < currWord.length; i++) {
@@ -65,13 +82,12 @@ function App() {
     let assembledCurrWord = Hangul.assemble(currWord);
 
     if (!wordDictionary.has(assembledCurrWord)) {
-      alert('단어목록에 없습니다');
+      setAlertControl(true);
       return;
     }
     setCurrAttempt({ attempt: currAttempt.attempt + 1, letterPos: 0 });
 
     if (JSON.stringify(currWord) === JSON.stringify(correctWord)) {
-      console.log('끝');
       setGameOver({ gameOver: true, guessedWord: true });
       return;
     }
@@ -112,6 +128,13 @@ function App() {
   return (
     <div className='App'>
       <div className='main-container'>
+        {alertControl && (
+          <div className='alert-wrapper'>
+            <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
+              단어목록에 없습니다
+            </div>
+          </div>
+        )}
         <nav>
           <h1>ㅇㅜㅓㄷㅡㄹ</h1>
         </nav>
