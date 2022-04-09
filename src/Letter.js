@@ -10,7 +10,7 @@ function Letter({ letterPos, attemptVal }) {
     setRightLetters,
     setCloseLetters,
   } = useContext(AppContext);
-  const letter = board[attemptVal][letterPos];
+  const letter = board.board[attemptVal][letterPos];
 
   const correct = correctWord[letterPos] === letter;
   const almost = !correct && letter !== '' && correctWord.includes(letter);
@@ -31,8 +31,19 @@ function Letter({ letterPos, attemptVal }) {
     }
   }, [currAttempt.attempt]);
 
+  const isTypingEffectOn = () => {
+    if (
+      board.isEnterKey &&
+      attemptVal === currAttempt.attempt &&
+      letterPos === currAttempt.letterPos - 1
+    ) {
+      return 'typing-animation border-black';
+    }
+    return '';
+  };
+
   return (
-    <div className='letter' id={letterState}>
+    <div className={`letter ${isTypingEffectOn()}`} id={letterState}>
       {letter}
     </div>
   );

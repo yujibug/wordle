@@ -10,7 +10,10 @@ export const AppContext = createContext();
 const Hangul = require('hangul-js');
 
 function App() {
-  const [board, setBoard] = useState(boardDefault);
+  const [board, setBoard] = useState({
+    board: boardDefault,
+    isEnterKey: false,
+  });
   const [currAttempt, setCurrAttempt] = useState({ attempt: 0, letterPos: 0 });
 
   const [wordDictionary, setWordDictionary] = useState(wordSet);
@@ -27,6 +30,27 @@ function App() {
   const [alertControl, setAlertControl] = useState(false);
   const [fadeOutAnimation, setFadeOutAnimation] = useState('');
   const [fadeInAnimation, setFadeInAnimation] = useState('');
+
+  useEffect(() => {
+    let currAttempt = JSON.parse(localStorage.getItem('currAttempt'));
+    let guesses = JSON.parse(localStorage.getItem('guesses'));
+    let solution = localStorage.getItem('solution');
+    console.log(guesses);
+    if (currAttempt !== null) {
+      console.log('hi');
+      setCurrAttempt(currAttempt);
+    }
+    if (guesses !== null) {
+      setBoard({
+        board: guesses,
+        isEnterKey: false,
+      });
+    }
+    if (solution !== null) {
+      setCorrectWord(solution);
+    }
+    // 로컬스토리지에서 정보 불러와서 state 값 바꿔주기
+  }, []);
 
   useEffect(() => {
     setFadeInAnimation('fade-in-animation');
@@ -77,7 +101,7 @@ function App() {
   const onEnter = () => {
     if (currAttempt.letterPos !== 6) return;
 
-    let currWord = [...board[currAttempt.attempt]];
+    let currWord = [...board.board[currAttempt.attempt]];
     assembleletter(currWord);
     let assembledCurrWord = Hangul.assemble(currWord);
 
@@ -86,6 +110,15 @@ function App() {
       return;
     }
     setCurrAttempt({ attempt: currAttempt.attempt + 1, letterPos: 0 });
+    localStorage.setItem(
+      'currAttempt',
+      JSON.stringify({
+        attempt: currAttempt.attempt + 1,
+        letterPos: 0,
+      })
+    );
+    localStorage.setItem('guesses', JSON.stringify(board.board));
+    localStorage.setItem('solution', correctWord);
 
     if (JSON.stringify(currWord) === JSON.stringify(correctWord)) {
       setGameOver({ gameOver: true, guessedWord: true });
@@ -98,23 +131,23 @@ function App() {
   };
 
   const onDelete = () => {
-    const copiedBoard = [...board];
+    const copiedBoard = [...board.board];
     if (currAttempt.letterPos === 0) {
       return;
     }
     setNotWord(false);
     copiedBoard[currAttempt.attempt][currAttempt.letterPos - 1] = '';
-    setBoard(copiedBoard);
+    setBoard({ board: copiedBoard, isEnterKey: false });
     setCurrAttempt({ ...currAttempt, letterPos: currAttempt.letterPos - 1 });
   };
 
   const onSelectLetter = (keyVal) => {
     if (currAttempt.letterPos > 5) return;
-    const copiedBoard = [...board];
+    const copiedBoard = [...board.board];
     copiedBoard[currAttempt.attempt][currAttempt.letterPos] = keyVal;
-    setBoard(copiedBoard);
+    setBoard({ board: copiedBoard, isEnterKey: true });
     if (currAttempt.letterPos === 5) {
-      let currWord = [...board[currAttempt.attempt]];
+      let currWord = [...board.board[currAttempt.attempt]];
       assembleletter(currWord);
       let assembledCurrWord = Hangul.assemble(currWord);
 

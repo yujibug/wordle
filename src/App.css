@@ -64,26 +64,6 @@ div {
   animation: fade-out 1s;
 }
 
-@keyframes typing {
-  0% {
-    transform: scale(0.8);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.typing-animation {
-  animation: typing 0.2s;
-}
-
-nav {
-  height: 65px;
-}
-
 .letter {
   box-sizing: border-box;
   display: inline-block;
@@ -97,6 +77,30 @@ nav {
   margin: 2.5px;
   border: 2px solid rgb(224, 222, 231);
   font-weight: 700;
+}
+
+@keyframes typing {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.typing-animation {
+  animation: typing 0.35s;
+}
+
+.border-black {
+  border: 2px solid black;
+}
+
+nav {
+  height: 65px;
 }
 
 #correct {
@@ -137,6 +141,10 @@ nav {
   cursor: pointer;
   font-size: 13px;
   font-weight: 400;
+}
+
+.key:active {
+  background-color: #c1d2d9;
 }
 
 .key p {
