@@ -35,9 +35,7 @@ function App() {
     let currAttempt = JSON.parse(localStorage.getItem('currAttempt'));
     let guesses = JSON.parse(localStorage.getItem('guesses'));
     let solution = localStorage.getItem('solution');
-    console.log(guesses);
     if (currAttempt !== null) {
-      console.log('hi');
       setCurrAttempt(currAttempt);
     }
     if (guesses !== null) {
@@ -49,7 +47,6 @@ function App() {
     if (solution !== null) {
       setCorrectWord(solution);
     }
-    // 로컬스토리지에서 정보 불러와서 state 값 바꿔주기
   }, []);
 
   useEffect(() => {
@@ -122,11 +119,23 @@ function App() {
 
     if (JSON.stringify(currWord) === JSON.stringify(correctWord)) {
       setGameOver({ gameOver: true, guessedWord: true });
+      localStorage.setItem('guesses', JSON.stringify(boardDefault));
+      localStorage.setItem(
+        'currAttempt',
+        JSON.stringify({ attempt: 0, letterPos: 0 })
+      );
+      localStorage.removeItem('solution');
       return;
     }
 
     if (currAttempt.attempt === 5) {
       setGameOver({ gameOver: true, guessedWord: false });
+      localStorage.setItem('guesses', JSON.stringify(boardDefault));
+      localStorage.setItem(
+        'currAttempt',
+        JSON.stringify({ attempt: 0, letterPos: 0 })
+      );
+      localStorage.removeItem('solution');
     }
   };
 
@@ -193,7 +202,7 @@ function App() {
           }}
         >
           <Board></Board>
-          {gameOver.gameOver ? <GameOver></GameOver> : <Keyboard></Keyboard>}
+          <Keyboard></Keyboard>
         </AppContext.Provider>
       </div>
     </div>
