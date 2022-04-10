@@ -11,7 +11,14 @@ function GameOver() {
         <h1>{gameOver.guessedWord ? '잘했어요!' : '아쉬워요'}</h1>
         <h1>정답 : '{correctWord}'</h1>
         <div className='btn-wrapper'>
-          <button className='btn'>새 게임 시작</button>
+          <button
+            className='btn'
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            새 게임 시작
+          </button>
         </div>
         <div className='btn-wrapper'>
           <button className='btn'>결과 복사</button>
