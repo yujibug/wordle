@@ -6,12 +6,17 @@ function GameOver() {
     useContext(AppContext);
 
   return (
-    <div className='gameOver'>
-      <h3>{gameOver.guessedWord ? '이겼다!' : '졌다..'}</h3>
-      <h1>정답: {correctWord}</h1>
-      {gameOver.guessedWord && (
-        <h3>당신은 {currAttempt.attempt}번의 시도만에 정답을 맞췄습니다</h3>
-      )}
+    <div className='gameover-modal'>
+      <div className='gameover-modal-body'>
+        <h1>{gameOver.guessedWord ? '잘했어요!' : '아쉬워요'}</h1>
+        <h1>정답 : '{correctWord}'</h1>
+        <div className='btn-wrapper'>
+          <button className='btn'>새 게임 시작</button>
+        </div>
+        <div className='btn-wrapper'>
+          <button className='btn'>결과 복사</button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -66,6 +66,25 @@ function App() {
     };
   }, [alertControl]);
 
+  const resetLocalStorage = () => {
+    localStorage.setItem(
+      'guesses',
+      JSON.stringify([
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+        ['', '', '', '', '', ''],
+      ])
+    );
+    localStorage.setItem(
+      'currAttempt',
+      JSON.stringify({ attempt: 0, letterPos: 0 })
+    );
+    localStorage.removeItem('solution');
+  };
+
   const assembleletter = (currWord) => {
     for (let i = 0; i < currWord.length; i++) {
       if (currWord[i] === 'ㄱ' && currWord[i + 1] === 'ㄱ') {
@@ -119,23 +138,13 @@ function App() {
 
     if (JSON.stringify(currWord) === JSON.stringify(correctWord)) {
       setGameOver({ gameOver: true, guessedWord: true });
-      localStorage.setItem('guesses', JSON.stringify(boardDefault));
-      localStorage.setItem(
-        'currAttempt',
-        JSON.stringify({ attempt: 0, letterPos: 0 })
-      );
-      localStorage.removeItem('solution');
+      resetLocalStorage();
       return;
     }
 
     if (currAttempt.attempt === 5) {
       setGameOver({ gameOver: true, guessedWord: false });
-      localStorage.setItem('guesses', JSON.stringify(boardDefault));
-      localStorage.setItem(
-        'currAttempt',
-        JSON.stringify({ attempt: 0, letterPos: 0 })
-      );
-      localStorage.removeItem('solution');
+      resetLocalStorage();
     }
   };
 
@@ -169,42 +178,43 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='main-container'>
-        {alertControl && (
-          <div className='alert-wrapper'>
-            <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
-              단어목록에 없습니다
+      <AppContext.Provider
+        value={{
+          board,
+          setBoard,
+          currAttempt,
+          setCurrAttempt,
+          onEnter,
+          onDelete,
+          onSelectLetter,
+          notWord,
+          disabledLetters,
+          setDisabledLetters,
+          rightLetters,
+          setRightLetters,
+          closeLetters,
+          setCloseLetters,
+          setGameOver,
+          gameOver,
+          correctWord,
+        }}
+      >
+        {gameOver.gameOver && <GameOver></GameOver>}
+        <div className='main-container'>
+          {alertControl && (
+            <div className='alert-wrapper'>
+              <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
+                단어목록에 없습니다
+              </div>
             </div>
-          </div>
-        )}
-        <nav>
-          <h1>ㅇㅜㅓㄷㅡㄹ</h1>
-        </nav>
-        <AppContext.Provider
-          value={{
-            board,
-            setBoard,
-            currAttempt,
-            setCurrAttempt,
-            onEnter,
-            onDelete,
-            onSelectLetter,
-            notWord,
-            disabledLetters,
-            setDisabledLetters,
-            rightLetters,
-            setRightLetters,
-            closeLetters,
-            setCloseLetters,
-            setGameOver,
-            gameOver,
-            correctWord,
-          }}
-        >
+          )}
+          <nav>
+            <h1>ㅇㅜㅓㄷㅡㄹ</h1>
+          </nav>
           <Board></Board>
           <Keyboard></Keyboard>
-        </AppContext.Provider>
-      </div>
+        </div>
+      </AppContext.Provider>
     </div>
   );
 }
