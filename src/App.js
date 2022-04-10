@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
     let currAttempt = JSON.parse(localStorage.getItem('currAttempt'));
     let guesses = JSON.parse(localStorage.getItem('guesses'));
-    let solution = localStorage.getItem('solution');
+    let solution = JSON.parse(localStorage.getItem('solution'));
     if (currAttempt !== null) {
       setCurrAttempt(currAttempt);
     }
@@ -46,6 +46,8 @@ function App() {
     }
     if (solution !== null) {
       setCorrectWord(solution);
+    } else {
+      localStorage.setItem('solution', JSON.stringify(todaysWord));
     }
   }, []);
 
@@ -82,7 +84,7 @@ function App() {
       'currAttempt',
       JSON.stringify({ attempt: 0, letterPos: 0 })
     );
-    localStorage.removeItem('solution');
+    localStorage.setItem('solution', JSON.stringify(todaysWord));
   };
 
   const assembleletter = (currWord) => {
@@ -118,6 +120,7 @@ function App() {
     if (currAttempt.letterPos !== 6) return;
 
     let currWord = [...board.board[currAttempt.attempt]];
+    let currWordArray = [...board.board[currAttempt.attempt]];
     assembleletter(currWord);
     let assembledCurrWord = Hangul.assemble(currWord);
 
@@ -134,9 +137,10 @@ function App() {
       })
     );
     localStorage.setItem('guesses', JSON.stringify(board.board));
-    localStorage.setItem('solution', correctWord);
+    console.log(JSON.stringify(currWordArray));
+    console.log(JSON.stringify(correctWord));
 
-    if (JSON.stringify(currWord) === JSON.stringify(correctWord)) {
+    if (JSON.stringify(currWordArray) === JSON.stringify(correctWord)) {
       setGameOver({ gameOver: true, guessedWord: true });
       resetLocalStorage();
       return;
