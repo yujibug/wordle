@@ -230,14 +230,12 @@ function App() {
         {gameOver.gameOver && <GameOver></GameOver>}
         <div className='main-container'>
           {errorAlertControl && (
-            <div className='alert-wrapper'>
-              <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
-                단어목록에 없습니다
-              </div>
+            <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
+              단어목록에 없습니다
             </div>
           )}
           <nav>
-            <h1>ㅇㅜㅓㄷㅡㄹ</h1>
+            <h1>무한워들</h1>
           </nav>
           <Board></Board>
           <Keyboard></Keyboard>

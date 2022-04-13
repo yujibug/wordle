@@ -4,7 +4,6 @@ import { AppContext } from './App';
 function GameOver() {
   const {
     gameOver,
-    setGameOver,
     correctWord,
     currAttempt,
     copyAlertControl,
@@ -52,7 +51,7 @@ function GameOver() {
     }
     result = result.join('');
     result = result.split('개행');
-    result.push([], ['yujibug.github.io/wordle']);
+    result.push([], ['yujibug.github.io/muhanwordle']);
     result = result.join('\r\n');
     doCopy(result);
   };

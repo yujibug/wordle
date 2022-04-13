@@ -53,7 +53,7 @@ function Keyboard() {
 
   return (
     <div className='keyboard' onKeyDown={handleKeyboard}>
-      <div className='line1'>
+      <div className='line'>
         {keys1.map((key, index) => {
           return (
             <Key
@@ -66,7 +66,7 @@ function Keyboard() {
           );
         })}
       </div>
-      <div className='line2'>
+      <div className='line'>
         {keys2.map((key, index) => {
           return (
             <Key
@@ -79,7 +79,7 @@ function Keyboard() {
           );
         })}
       </div>
-      <div className='line3'>
+      <div className='line'>
         <Key keyVal='입력' isBig={true}></Key>
         {keys3.map((key, index) => {
           return (
