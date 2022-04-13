@@ -221,9 +221,13 @@ nav {
   text-align: center;
   text-decoration: none;
   color: #fcf8f8;
-  background-color: #4f46e5;
+  background-color: #037ef3;
   width: 180px;
   height: 50px;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.btn:active {
+  background-color: #5aa9f4;
 }

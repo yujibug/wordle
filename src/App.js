@@ -10,6 +10,10 @@ export const AppContext = createContext();
 const Hangul = require('hangul-js');
 
 function App() {
+  /*학급 -> 하끕으로 되는데
+그냥 단어목록체크할때
+학급 && 하끕 has 단어목록 되면 pass 되는걸로 
+assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체로 return시켜서 하기 */
   const [board, setBoard] = useState({
     board: boardDefault,
     isEnterKey: false,
@@ -88,43 +92,64 @@ function App() {
   };
 
   const assembleletter = (currWord) => {
-    for (let i = 0; i < currWord.length; i++) {
-      if (currWord[i] === 'ㄱ' && currWord[i + 1] === 'ㄱ') {
-        currWord.splice(i, 2, 'ㄲ');
+    let word1 = [...currWord];
+    let word2 = [...currWord];
+    for (let i = 0; i < word1.length; i++) {
+      if (word1[i] === 'ㄱ' && word1[i + 1] === 'ㄱ') {
+        word1.splice(i, 2, 'ㄲ');
       }
-      if (currWord[i] === 'ㄷ' && currWord[i + 1] === 'ㄷ') {
-        currWord.splice(i, 2, 'ㄸ');
+      if (word1[i] === 'ㄷ' && word1[i + 1] === 'ㄷ') {
+        word1.splice(i, 2, 'ㄸ');
       }
-      if (currWord[i] === 'ㅂ' && currWord[i + 1] === 'ㅂ') {
-        currWord.splice(i, 2, 'ㅃ');
+      if (word1[i] === 'ㅂ' && word1[i + 1] === 'ㅂ') {
+        word1.splice(i, 2, 'ㅃ');
       }
-      if (currWord[i] === 'ㅅ' && currWord[i + 1] === 'ㅅ') {
-        currWord.splice(i, 2, 'ㅆ');
+      if (word1[i] === 'ㅅ' && word1[i + 1] === 'ㅅ') {
+        word1.splice(i, 2, 'ㅆ');
       }
-      if (currWord[i] === 'ㅈ' && currWord[i + 1] === 'ㅈ') {
-        currWord.splice(i, 2, 'ㅉ');
+      if (word1[i] === 'ㅈ' && word1[i + 1] === 'ㅈ') {
+        word1.splice(i, 2, 'ㅉ');
       }
-      if (currWord[i] === 'ㅏ' && currWord[i + 1] === 'ㅣ') {
-        currWord.splice(i, 2, 'ㅐ');
+      if (word1[i] === 'ㅏ' && word1[i + 1] === 'ㅣ') {
+        word1.splice(i, 2, 'ㅐ');
       }
-      if (currWord[i] === 'ㅓ' && currWord[i + 1] === 'ㅣ') {
-        currWord.splice(i, 2, 'ㅔ');
+      if (word1[i] === 'ㅓ' && word1[i + 1] === 'ㅣ') {
+        word1.splice(i, 2, 'ㅔ');
       }
-      if (currWord[i] === 'ㅕ' && currWord[i + 1] === 'ㅣ') {
-        currWord.splice(i, 2, 'ㅖ');
+      if (word1[i] === 'ㅕ' && word1[i + 1] === 'ㅣ') {
+        word1.splice(i, 2, 'ㅖ');
       }
     }
+    for (let i = 0; i < word2.length; i++) {
+      if (word2[i] === 'ㅏ' && word2[i + 1] === 'ㅣ') {
+        word2.splice(i, 2, 'ㅐ');
+      }
+      if (word2[i] === 'ㅓ' && word2[i + 1] === 'ㅣ') {
+        word2.splice(i, 2, 'ㅔ');
+      }
+      if (word2[i] === 'ㅕ' && word2[i + 1] === 'ㅣ') {
+        word2.splice(i, 2, 'ㅖ');
+      }
+    }
+
+    return [Hangul.assemble(word1), Hangul.assemble(word2)];
   };
 
   const onEnter = () => {
+    // currWord -> assembleletter 함수 이용해서 겸자읍, 겸모음 형태로 바꾼 뒤 hangul.assmeble 해서 합쳐서 완전한 단어 형태로 바꾼 뒤 wordDictionary에서 검사
+    // currWordArray -> 초기 currWord랑 같은 형태로 다 분리된 형태로 나오는 정답과 비교하기 위해 있는 어레이
+
     if (currAttempt.letterPos !== 6) return;
 
     let currWord = [...board.board[currAttempt.attempt]];
     let currWordArray = [...board.board[currAttempt.attempt]];
-    assembleletter(currWord);
-    let assembledCurrWord = Hangul.assemble(currWord);
+    let assembledCurrWord = assembleletter(currWord);
+    console.log(assembledCurrWord);
 
-    if (!wordDictionary.has(assembledCurrWord)) {
+    if (
+      !wordDictionary.has(assembledCurrWord[0]) &&
+      !wordDictionary.has(assembledCurrWord[1])
+    ) {
       setAlertControl(true);
       return;
     }
@@ -137,8 +162,8 @@ function App() {
       })
     );
     localStorage.setItem('guesses', JSON.stringify(board.board));
-    console.log(JSON.stringify(currWordArray));
-    console.log(JSON.stringify(correctWord));
+    // console.log(JSON.stringify(currWordArray));
+    // console.log(JSON.stringify(correctWord));
 
     if (JSON.stringify(currWordArray) === JSON.stringify(correctWord)) {
       setGameOver({ gameOver: true, guessedWord: true });
@@ -170,10 +195,13 @@ function App() {
     setBoard({ board: copiedBoard, isEnterKey: true });
     if (currAttempt.letterPos === 5) {
       let currWord = [...board.board[currAttempt.attempt]];
-      assembleletter(currWord);
-      let assembledCurrWord = Hangul.assemble(currWord);
+      let assembledCurrWord = assembleletter(currWord);
+      console.log(assembledCurrWord);
 
-      if (!wordDictionary.has(assembledCurrWord)) {
+      if (
+        !wordDictionary.has(assembledCurrWord[0]) &&
+        !wordDictionary.has(assembledCurrWord[1])
+      ) {
         setNotWord(true);
       }
     }
