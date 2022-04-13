@@ -199,7 +199,6 @@ nav {
   box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
   transform: translateX(-50%) translateY(-50%);
 }
-
 .gameover-modal-body h1:first-child {
   font-size: 40px;
 }

@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, useRef } from 'react';
 import Board from './Board';
 import Keyboard from './Keyboard';
 import './App.css';
@@ -10,10 +10,6 @@ export const AppContext = createContext();
 const Hangul = require('hangul-js');
 
 function App() {
-  /*학급 -> 하끕으로 되는데
-그냥 단어목록체크할때
-학급 && 하끕 has 단어목록 되면 pass 되는걸로 
-assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체로 return시켜서 하기 */
   const [board, setBoard] = useState({
     board: boardDefault,
     isEnterKey: false,
@@ -31,7 +27,8 @@ assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체
     guessedWord: false,
   });
 
-  const [alertControl, setAlertControl] = useState(false);
+  const [errorAlertControl, setErroralertControl] = useState(false);
+  const [copyAlertControl, setCopyAlertControl] = useState(false);
   const [fadeOutAnimation, setFadeOutAnimation] = useState('');
   const [fadeInAnimation, setFadeInAnimation] = useState('');
 
@@ -61,7 +58,7 @@ assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체
       setFadeOutAnimation('fade-out-animation');
     }, 2000);
     let timerAlert = setTimeout(() => {
-      setAlertControl(false);
+      setErroralertControl(false);
     }, 3000);
     return () => {
       clearTimeout(timerAlert);
@@ -70,7 +67,7 @@ assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체
       setFadeInAnimation('');
       setFadeOutAnimation('');
     };
-  }, [alertControl]);
+  }, [errorAlertControl]);
 
   const resetLocalStorage = () => {
     localStorage.setItem(
@@ -136,21 +133,17 @@ assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체
   };
 
   const onEnter = () => {
-    // currWord -> assembleletter 함수 이용해서 겸자읍, 겸모음 형태로 바꾼 뒤 hangul.assmeble 해서 합쳐서 완전한 단어 형태로 바꾼 뒤 wordDictionary에서 검사
-    // currWordArray -> 초기 currWord랑 같은 형태로 다 분리된 형태로 나오는 정답과 비교하기 위해 있는 어레이
-
     if (currAttempt.letterPos !== 6) return;
 
     let currWord = [...board.board[currAttempt.attempt]];
     let currWordArray = [...board.board[currAttempt.attempt]];
     let assembledCurrWord = assembleletter(currWord);
-    console.log(assembledCurrWord);
 
     if (
       !wordDictionary.has(assembledCurrWord[0]) &&
       !wordDictionary.has(assembledCurrWord[1])
     ) {
-      setAlertControl(true);
+      setErroralertControl(true);
       return;
     }
     setCurrAttempt({ attempt: currAttempt.attempt + 1, letterPos: 0 });
@@ -162,8 +155,6 @@ assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체
       })
     );
     localStorage.setItem('guesses', JSON.stringify(board.board));
-    // console.log(JSON.stringify(currWordArray));
-    // console.log(JSON.stringify(correctWord));
 
     if (JSON.stringify(currWordArray) === JSON.stringify(correctWord)) {
       setGameOver({ gameOver: true, guessedWord: true });
@@ -196,7 +187,6 @@ assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체
     if (currAttempt.letterPos === 5) {
       let currWord = [...board.board[currAttempt.attempt]];
       let assembledCurrWord = assembleletter(currWord);
-      console.log(assembledCurrWord);
 
       if (
         !wordDictionary.has(assembledCurrWord[0]) &&
@@ -229,11 +219,17 @@ assembleletter 함수에서 겹자음 if구문 안한거랑 한거 둘다 객체
           setGameOver,
           gameOver,
           correctWord,
+          copyAlertControl,
+          setCopyAlertControl,
+          fadeInAnimation,
+          setFadeInAnimation,
+          fadeOutAnimation,
+          setFadeOutAnimation,
         }}
       >
         {gameOver.gameOver && <GameOver></GameOver>}
         <div className='main-container'>
-          {alertControl && (
+          {errorAlertControl && (
             <div className='alert-wrapper'>
               <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
                 단어목록에 없습니다
