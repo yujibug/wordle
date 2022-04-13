@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { AppContext } from './App';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 function GameOver() {
   const {
@@ -12,6 +14,8 @@ function GameOver() {
     setFadeInAnimation,
     fadeOutAnimation,
     setFadeOutAnimation,
+    closeGameOverModal,
+    setCloseGameOverModal,
   } = useContext(AppContext);
 
   useEffect(() => {
@@ -34,7 +38,7 @@ function GameOver() {
   const copyResult = () => {
     const letterDiv = document.getElementsByClassName('letter');
     const finalAttempt = gameOver.guessedWord ? currAttempt.attempt : 'X';
-    let result = [[`무한워들 ${finalAttempt}/6`], ['개행']];
+    let result = [[`오늘의워들 ${finalAttempt}/6`], ['개행']];
     for (let i = 0; i < letterDiv.length; i++) {
       if (i % 6 === 0 && i < 6 * currAttempt.attempt) {
         result.push('개행');
@@ -51,7 +55,7 @@ function GameOver() {
     }
     result = result.join('');
     result = result.split('개행');
-    result.push([], ['yujibug.github.io/muhanwordle']);
+    result.push([], ['yujibug.github.io/wordle']);
     result = result.join('\r\n');
     doCopy(result);
   };
@@ -95,8 +99,10 @@ function GameOver() {
     }
   };
 
+  const modalState = closeGameOverModal ? 'invisible' : '';
+
   return (
-    <div className='gameover-modal'>
+    <div className={`modal ${modalState}`}>
       {copyAlertControl && (
         <div className='alert-wrapper'>
           <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
@@ -104,10 +110,17 @@ function GameOver() {
           </div>
         </div>
       )}
-      <div className='gameover-modal-body'>
+      <div className='gameover-modal-body modal-body'>
+        <FontAwesomeIcon
+          icon={faCircleXmark}
+          className='xMark'
+          onClick={() => {
+            setCloseGameOverModal(true);
+          }}
+        />
         <h1>{gameOver.guessedWord ? '잘했어요!' : '아쉬워요'}</h1>
         <h1>정답 : '{correctWord}'</h1>
-        <div className='btn-wrapper'>
+        {/* <div className='btn-wrapper'>
           <button
             className='btn'
             onClick={() => {
@@ -116,7 +129,7 @@ function GameOver() {
           >
             새 게임 시작
           </button>
-        </div>
+        </div> */}
         <div className='btn-wrapper'>
           <button className='btn' onClick={copyResult}>
             결과 복사

@@ -65,4 +65,5 @@ const disassembledLetter = disassembleLetter(disassembledWords);
 const filteredWords = filterwords(disassembledLetter);
 
 export const todaysWord = pickWord(filteredWords);
+KoreanNounList.ALL_NOUNS.push('붐업', '승훈', '윤홍', '고구미');
 export const wordSet = new Set(KoreanNounList.ALL_NOUNS);

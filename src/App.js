@@ -4,6 +4,9 @@ import Keyboard from './Keyboard';
 import './App.css';
 import { boardDefault, wordSet, todaysWord } from './words';
 import GameOver from './GameOver';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
+import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 export const AppContext = createContext();
 
@@ -17,25 +20,34 @@ function App() {
   const [currAttempt, setCurrAttempt] = useState({ attempt: 0, letterPos: 0 });
 
   const [wordDictionary, setWordDictionary] = useState(wordSet);
-  const [correctWord, setCorrectWord] = useState(todaysWord);
+  // const [correctWord, setCorrectWord] = useState(todaysWord);
+  const [correctWord, setCorrectWord] = useState([
+    'ㅇ',
+    'ㅠ',
+    'ㄴ',
+    'ㅎ',
+    'ㅗ',
+    'ㅇ',
+  ]);
   const [notWord, setNotWord] = useState(false);
   const [disabledLetters, setDisabledLetters] = useState([]);
   const [rightLetters, setRightLetters] = useState([]);
   const [closeLetters, setCloseLetters] = useState([]);
-  const [gameOver, setGameOver] = useState({
-    gameOver: false,
-    guessedWord: false,
-  });
+  const [gameOver, setGameOver] = useState({});
 
   const [errorAlertControl, setErroralertControl] = useState(false);
   const [copyAlertControl, setCopyAlertControl] = useState(false);
   const [fadeOutAnimation, setFadeOutAnimation] = useState('');
   const [fadeInAnimation, setFadeInAnimation] = useState('');
 
+  const [closeGameOverModal, setCloseGameOverModal] = useState(false);
+  const [questionModal, setQuestionModal] = useState(false);
+
   useEffect(() => {
     let currAttempt = JSON.parse(localStorage.getItem('currAttempt'));
     let guesses = JSON.parse(localStorage.getItem('guesses'));
     let solution = JSON.parse(localStorage.getItem('solution'));
+    let gameEnd = JSON.parse(localStorage.getItem('gameOver'));
     if (currAttempt !== null) {
       setCurrAttempt(currAttempt);
     }
@@ -48,7 +60,10 @@ function App() {
     if (solution !== null) {
       setCorrectWord(solution);
     } else {
-      localStorage.setItem('solution', JSON.stringify(todaysWord));
+      // localStorage.setItem('solution', JSON.stringify(todaysWord));
+    }
+    if (gameEnd !== null) {
+      setGameOver(gameEnd);
     }
   }, []);
 
@@ -85,7 +100,11 @@ function App() {
       'currAttempt',
       JSON.stringify({ attempt: 0, letterPos: 0 })
     );
-    localStorage.setItem('solution', JSON.stringify(todaysWord));
+    // localStorage.setItem('solution', JSON.stringify(todaysWord));
+    localStorage.setItem(
+      'solution',
+      JSON.stringify(['ㅇ', 'ㅠ', 'ㄴ', 'ㅎ', 'ㅗ', 'ㅇ'])
+    );
   };
 
   const assembleletter = (currWord) => {
@@ -133,6 +152,9 @@ function App() {
   };
 
   const onEnter = () => {
+    if (gameOver.gameOver) {
+      return;
+    }
     if (currAttempt.letterPos !== 6) return;
 
     let currWord = [...board.board[currAttempt.attempt]];
@@ -158,17 +180,28 @@ function App() {
 
     if (JSON.stringify(currWordArray) === JSON.stringify(correctWord)) {
       setGameOver({ gameOver: true, guessedWord: true });
-      resetLocalStorage();
+      localStorage.setItem(
+        'gameOver',
+        JSON.stringify({ gameOver: true, guessedWord: true })
+      );
+      // resetLocalStorage();
       return;
     }
 
     if (currAttempt.attempt === 5) {
       setGameOver({ gameOver: true, guessedWord: false });
-      resetLocalStorage();
+      localStorage.setItem(
+        'gameOver',
+        JSON.stringify({ gameOver: true, guessedWord: false })
+      );
+      // resetLocalStorage();
     }
   };
 
   const onDelete = () => {
+    if (gameOver.gameOver) {
+      return;
+    }
     const copiedBoard = [...board.board];
     if (currAttempt.letterPos === 0) {
       return;
@@ -180,6 +213,9 @@ function App() {
   };
 
   const onSelectLetter = (keyVal) => {
+    if (gameOver.gameOver) {
+      return;
+    }
     if (currAttempt.letterPos > 5) return;
     const copiedBoard = [...board.board];
     copiedBoard[currAttempt.attempt][currAttempt.letterPos] = keyVal;
@@ -225,9 +261,25 @@ function App() {
           setFadeInAnimation,
           fadeOutAnimation,
           setFadeOutAnimation,
+          closeGameOverModal,
+          setCloseGameOverModal,
         }}
       >
         {gameOver.gameOver && <GameOver></GameOver>}
+        {questionModal && (
+          <div className='modal'>
+            <div className='question-modal-body modal-body'>
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                className='xMark'
+                onClick={() => {
+                  setQuestionModal(false);
+                }}
+              />
+              <p>"오늘의 워들"은 자정에 갱신됩니다.</p>
+            </div>
+          </div>
+        )}
         <div className='main-container'>
           {errorAlertControl && (
             <div className={`alert ${fadeInAnimation} ${fadeOutAnimation}`}>
@@ -235,7 +287,16 @@ function App() {
             </div>
           )}
           <nav>
-            <h1>무한워들</h1>
+            <h1>
+              <p className='cp'>오늘의</p>워들
+            </h1>
+            <FontAwesomeIcon
+              icon={faCircleQuestion}
+              className='question'
+              onClick={() => {
+                setQuestionModal(true);
+              }}
+            />
           </nav>
           <Board></Board>
           <Keyboard></Keyboard>
