@@ -55,7 +55,7 @@ function GameOver() {
     }
     result = result.join('');
     result = result.split('개행');
-    result.push([], ['yujibug.github.io/daywordle #오늘의워들']);
+    result.push([], ['yujibug.github.io/muhanwordle #무한워들']);
     result = result.join('\r\n');
     doCopy(result);
   };
