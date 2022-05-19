@@ -67,8 +67,8 @@ div {
 
 nav {
   height: 65px;
-  display: flex;
   width: 350px;
+  display: flex;
   margin: 0 auto;
   justify-content: space-between;
 }
@@ -78,23 +78,15 @@ nav h1 {
   margin-bottom: 0;
 }
 
-.cp {
+nav span {
   color: #6dc767;
 }
 
-nav p {
-  margin: 0;
-  display: inline;
-}
-
-.question {
+nav .arrowRight {
+  font-size: 18px;
+  margin-top: 18px;
+  margin-right: 14px;
   cursor: pointer;
-  font-size: 25px;
-  margin-top: 16px;
-}
-
-.question:active {
-  color: #c1d2d9;
 }
 
 .row {
@@ -239,7 +231,7 @@ nav p {
 
 .gameover-modal-body {
   width: 400px;
-  height: 380px;
+  height: 430px;
 }
 
 .xMark {
@@ -252,17 +244,34 @@ nav p {
   color: #c1d2d9;
 }
 
-.gameover-modal-body h1:first-child {
+.gameover-modal-body h1 {
   font-size: 40px;
+  margin-bottom: 0;
 }
 
-.gameover-modal-body h1:nth-child(2) {
-  font-size: 30px;
-  margin-bottom: 30px;
+.gameover-modal-body h2 {
+  margin-top: 20px;
+  margin-bottom: 14px;
+  font-size: 28px;
+}
+
+.gameover-letter {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  text-align: center;
+  padding-top: 6px;
+  border-radius: 5px;
+  margin: 2px;
+  border: 2px solid rgb(224, 222, 231);
+  font-weight: 700;
 }
 
 .btn-wrapper {
-  margin-top: 35px;
+  margin-top: 45px;
 }
 
 .btn {
@@ -282,4 +291,16 @@ nav p {
 
 .btn:active {
   background-color: #5aa9f4;
+}
+
+@media (min-width: 1200px) {
+  .arrowRight:hover {
+    color: #6dc767;
+  }
+}
+
+@media (max-width: 767px) {
+  .arrowRight:active {
+    color: #6dc767;
+  }
 }

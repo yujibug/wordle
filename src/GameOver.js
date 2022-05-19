@@ -55,7 +55,7 @@ function GameOver() {
     }
     result = result.join('');
     result = result.split('개행');
-    result.push([], ['yujibug.github.io/wordle']);
+    result.push([], ['yujibug.github.io/daywordle #오늘의워들']);
     result = result.join('\r\n');
     doCopy(result);
   };
@@ -119,17 +119,14 @@ function GameOver() {
           }}
         />
         <h1>{gameOver.guessedWord ? '잘했어요!' : '아쉬워요'}</h1>
-        <h1>정답 : '{correctWord}'</h1>
-        {/* <div className='btn-wrapper'>
-          <button
-            className='btn'
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
-            새 게임 시작
-          </button>
-        </div> */}
+        <h2>정답 :</h2>
+        {correctWord.map((letter, index) => {
+          return (
+            <div className='gameover-letter' id='correct' key={index}>
+              {letter}
+            </div>
+          );
+        })}
         <div className='btn-wrapper'>
           <button className='btn' onClick={copyResult}>
             결과 복사
